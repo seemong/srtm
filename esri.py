@@ -49,21 +49,23 @@ class Esri(object):
         return self.yllcorner + (self.nrows - 1) * self.cellsize
 
     def get_row_index(self, y):
-        return self.nrows - int((y - self.yllcorner) / self.cellsize)
+        idx = self.nrows - int((y - self.yllcorner) / self.cellsize)
+        return idx, self.yllcorner + (self.nrows - idx - 1) * self.cellsize
 
     def get_col_index(self, x):
-        return int((x - self.xllcorner) / self.cellsize)
+        idx = int((x - self.xllcorner) / self.cellsize)
+        return idx, self.xllcorner + self.cellsize * idx
 
     def filter(self, left, bottom, right, top):
-        startrow = self.get_row_index(top)
-        endrow = self.get_row_index(bottom)
-        startcol = self.get_col_index(left)
-        endcol = self.get_col_index(right)
+        startrow, starty = self.get_row_index(top)
+        endrow, endy = self.get_row_index(bottom)
+        startcol, startx = self.get_col_index(left)
+        endcol, endx = self.get_col_index(right)
 
         print('ncols         ' + str(endcol - startcol + 1))
         print('nrows         ' + str(endrow - startrow + 1))
-        print('xllcorner     ' + str(left))
-        print('yllcorner     ' + str(bottom))
+        print('xllcorner     ' + str(endx))
+        print('yllcorner     ' + str(endy))
         print('cellsize      ' + str(self.cellsize))
         print('NODATA_value  ' + '-9999')
 
